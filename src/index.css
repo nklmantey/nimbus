@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@font-face {
+	font-family: 'Lausanne';
+	src: local('Lausanne-Regular'), url('./assets/fonts/Lausanne-Regular.otf');
+}
+
+@font-face {
+	font-family: 'P22Mackinac';
+	src: local('P22Mackinac-Bold'), url('./assets/fonts/P22Mackinac-Bold.otf');
+}
+
+:root {
+	--font-lausanne: 'Lausanne', sans-serif;
+	--font-p22mackinac: 'P22Mackinac', sans-serif;
+	--font-primary: #ffffff90;
+	--font-secondary: #ffffff;
+	--background-primary: #212427;
+}
+
+body {
+	font-family: var(--font-lausanne);
+	background-color: var(--background-primary);
+	color: var(--font-primary);
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-p22mackinac);
+	letter-spacing: -0.025em;
+}
