@@ -1,4 +1,4 @@
-import { IconCloudOff, IconCopy, IconCopyCheck, IconCopyCheckFilled } from '@tabler/icons-react'
+import { IconCloudOff, IconCopy, IconCopyCheckFilled } from '@tabler/icons-react'
 import Typography from './Typography'
 import { useState } from 'react'
 
