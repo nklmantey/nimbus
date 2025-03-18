@@ -3,17 +3,10 @@ import { invoke } from '@tauri-apps/api'
 import { useEffect, useState } from 'react'
 import { ProfileCard } from '@/components/dashboard'
 import { SecondaryButton } from '@/components/ui'
-
-interface AwsProfile {
-	name: string
-	region?: string
-	access_key_id?: string
-	secret_access_key?: string
-	output?: string
-}
+import { useProfilesContext } from '@/contexts'
 
 export default function DashboardPage() {
-	const [profiles, setProfiles] = useState<AwsProfile[]>([])
+	const { profiles, setProfiles } = useProfilesContext()
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 
@@ -21,7 +14,7 @@ export default function DashboardPage() {
 		fetchProfiles()
 	}, [])
 
-	const fetchProfiles = async () => {
+	async function fetchProfiles() {
 		try {
 			const result = await invoke<AwsProfile[]>('fetch_aws_profiles')
 			setProfiles(result)
@@ -42,8 +35,9 @@ export default function DashboardPage() {
 
 	if (error) {
 		return (
-			<div className='flex items-center justify-center  w-full h-screen'>
+			<div className='flex flex-col gap-4 items-center justify-center  w-full h-screen'>
 				<ErrorState message='we could not fetch your aws profiles' />
+				<SecondaryButton title='retry' icon='/icons/sync.svg' />
 			</div>
 		)
 	}
