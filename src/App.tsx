@@ -1,5 +1,5 @@
 import { Typography } from '@/components/global'
-import { Button } from '@/components/ui'
+import { PrimaryButton } from '@/components/ui'
 import { Link } from 'react-router'
 
 export default function App() {
@@ -10,8 +10,8 @@ export default function App() {
 				<Typography as='body'>manage your AWS profiles better.</Typography>
 			</div>
 
-			<Link to='/login'>
-				<Button title='get started' />
+			<Link to='/dashboard'>
+				<PrimaryButton title='get started' />
 			</Link>
 		</div>
 	)
