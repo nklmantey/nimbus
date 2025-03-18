@@ -1,18 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Typography } from '../global'
 
-type PrimaryButtonProps = {
-	title: string
-	onClick?: () => void
-	isLoading?: boolean
-	isDisabled?: boolean
-	className?: string
-}
-
-type SecondaryButtonProps = {
-	icon?: string
-} & PrimaryButtonProps
-
 export function PrimaryButton({ title, onClick, isLoading, isDisabled, className }: PrimaryButtonProps) {
 	return (
 		<button

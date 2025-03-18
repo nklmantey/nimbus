@@ -1,11 +1,5 @@
 import { cn } from '@/lib/utils'
 
-type TypographyProps = {
-	as: 'h1' | 'h2' | 'h3' | 'body' | 'small' | 'code'
-	children: React.ReactNode
-	className?: string
-}
-
 export default function Typography({ as, children, className }: TypographyProps) {
 	switch (as) {
 		case 'h1':

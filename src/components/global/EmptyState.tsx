@@ -16,7 +16,7 @@ export default function EmptyState() {
 			<div className='p-4 bg-[#ffffff06] rounded-full'>
 				<IconCloudOff className='text-[#ffffff60]' />
 			</div>
-			<div className='flex flex-col items-center gap-1 text-center'>
+			<div className='flex flex-col items-center gap-4 text-center'>
 				<Typography as='h3' className='text-[#ffffff90]'>
 					no aws profiles found
 				</Typography>
@@ -31,7 +31,7 @@ export default function EmptyState() {
 						aws configure --profile &lt;profile_name&gt;
 					</Typography>
 					<button onClick={handleCopy} className='p-2 cursor-pointer hover:bg-[#ffffff10] rounded-full transition-colors duration-200'>
-						{hasCopied ? <IconCopyCheckFilled size={18} className='text-[green]' /> : <IconCopy size={18} className='text-[#ffffff60]' />}
+						{hasCopied ? <IconCopyCheckFilled size={18} className='text-green-500' /> : <IconCopy size={18} className='text-[#ffffff60]' />}
 					</button>
 				</div>
 			</div>

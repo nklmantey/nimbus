@@ -7,7 +7,7 @@ export default function App() {
 		<div className='flex flex-col items-center justify-center w-full h-screen gap-8'>
 			<div className='flex flex-col items-center justify-center gap-2'>
 				<Typography as='h1'>nimbus.</Typography>
-				<Typography as='body'>manage your AWS profiles better.</Typography>
+				<Typography as='body'>manage your aws profiles better.</Typography>
 			</div>
 
 			<Link to='/dashboard'>

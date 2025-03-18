@@ -1,14 +1,6 @@
 import { Typography } from '@/components/global'
 import { cn } from '@/lib/utils'
 
-type InputProps = {
-	placeholder: string
-	error?: string
-	label?: string
-	className?: string
-	isPassword?: boolean
-}
-
 export default function Input({ placeholder, error, label, className, isPassword }: InputProps) {
 	return (
 		<div>
