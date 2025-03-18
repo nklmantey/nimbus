@@ -36,10 +36,10 @@ async fn fetch_aws_profiles() -> Result<Vec<AwsProfile>, String> {
     let config_ini = read_aws_file(config_path)
         .map_err(|e| format!("Failed to read config: {}", e))?;
 
-    // Use a HashMap to store profiles by name to prevent duplicates
+    // !USING A HASH MAP HERE TO PREVENT DUPES
     let mut profiles_map: HashMap<String, AwsProfile> = HashMap::new();
 
-    // First, process credentials file as it contains the essential access keys
+    // !START PROCESSING CRED. FILE FIRST SINCE IT HAS KEYS
     for (sec, prop) in credentials_ini.iter() {
         let profile_name = sec.unwrap_or("default").to_string();
         
@@ -54,16 +54,14 @@ async fn fetch_aws_profiles() -> Result<Vec<AwsProfile>, String> {
         profiles_map.insert(profile_name, profile);
     }
 
-    // Then enrich with config file information
+    // !READING CONFIG FILE
     for (sec, prop) in config_ini.iter() {
         let mut profile_name = sec.unwrap_or("default").to_string();
         
-        // In config file, non-default profiles are prefixed with "profile "
         if profile_name != "default" {
             profile_name = profile_name.trim_start_matches("profile ").to_string();
         }
 
-        // Get or create profile
         let profile = profiles_map.entry(profile_name.clone()).or_insert(AwsProfile {
             name: profile_name,
             region: None,
@@ -72,15 +70,14 @@ async fn fetch_aws_profiles() -> Result<Vec<AwsProfile>, String> {
             output: None,
         });
 
-        // Update profile with config information
         profile.region = prop.get("region").map(String::from);
         profile.output = prop.get("output").map(String::from);
     }
 
-    // Convert HashMap values into a Vec
+    // !CONVERT HASH MAP TO VEC
     let mut profiles: Vec<AwsProfile> = profiles_map.into_values().collect();
     
-    // Sort profiles alphabetically, with "default" first
+    // !SORT PROFILES IN ALPHABETICAL ORDER
     profiles.sort_by(|a, b| {
         if a.name == "default" {
             std::cmp::Ordering::Less
