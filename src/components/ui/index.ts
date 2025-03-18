@@ -1,3 +1,5 @@
-export { default as Button } from './Button'
+import { PrimaryButton, SecondaryButton } from './Button'
+
 export { default as BackButton } from './BackButton'
 export { default as Input } from './Input'
+export { PrimaryButton, SecondaryButton }

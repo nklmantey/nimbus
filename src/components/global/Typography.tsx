@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 type TypographyProps = {
-	as: 'h1' | 'h2' | 'h3' | 'body' | 'small'
+	as: 'h1' | 'h2' | 'h3' | 'body' | 'small' | 'code'
 	children: React.ReactNode
 	className?: string
 }
@@ -18,5 +18,7 @@ export default function Typography({ as, children, className }: TypographyProps)
 			return <p className={cn('text-base', className)}>{children}</p>
 		case 'small':
 			return <p className={cn('text-sm', className)}>{children}</p>
+		case 'code':
+			return <code className={cn('font-mono', className)}>{children}</code>
 	}
 }
