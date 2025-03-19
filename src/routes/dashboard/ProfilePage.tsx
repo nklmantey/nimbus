@@ -1,8 +1,8 @@
-import { ErrorState } from '@/components/global'
+import { ErrorState, Loader } from '@/components/global'
 import { SecondaryButton } from '@/components/ui'
-import { findProfileByName } from '@/utils'
 import { Link, useParams, Navigate } from 'react-router'
 import { useState } from 'react'
+import { useProfiles } from '@/contexts/ProfilesContext'
 
 // AWS Regions - we'll replace this with AWS SDK integration later
 const AWS_REGIONS = [
@@ -30,15 +30,35 @@ const AWS_REGIONS = [
 
 export default function ProfilePage() {
 	const { profile: profileName } = useParams()
+	const { profiles, isLoading, error } = useProfiles()
 	const [showAccessKey, setShowAccessKey] = useState(false)
 	const [showSecretKey, setShowSecretKey] = useState(false)
 	const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false)
+
+	if (isLoading) {
+		return (
+			<div className='flex items-center justify-center w-full h-screen'>
+				<Loader message='loading profile...' />
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div className='flex flex-col gap-4 items-center justify-center w-full h-screen'>
+				<ErrorState message='Error loading profile' />
+				<Link to='/dashboard'>
+					<SecondaryButton title='back to dashboard' />
+				</Link>
+			</div>
+		)
+	}
 
 	if (!profileName) {
 		return <Navigate to='/dashboard' />
 	}
 
-	const profile = findProfileByName(profileName)
+	const profile = profiles.find((p) => p.name === profileName)
 
 	if (!profile) {
 		return (
@@ -47,45 +67,45 @@ export default function ProfilePage() {
 					<Link to='/dashboard'>
 						<SecondaryButton title='back' />
 					</Link>
+					<ErrorState message={`Profile "${profileName}" not found`} />
 				</div>
-				<ErrorState message={`Profile "${profileName}" not found`} />
 			</div>
 		)
 	}
 
-	const maskKey = (key: string) => '•'.repeat(key.length)
+	const maskKey = (key: string) => '•'.repeat(Math.min(key.length, 40))
 
 	return (
-		<div className='w-full h-screen flex items-center justify-center'>
-			<div className='p-12 lg:px-48 lg:py-24 w-full h-full flex flex-col gap-4'>
+		<div className='w-full min-h-screen flex items-start justify-center'>
+			<div className='w-full max-w-7xl p-4 sm:p-6 lg:p-8 flex flex-col gap-4'>
 				<div className='flex items-center gap-2'>
 					<Link to='/dashboard'>
 						<SecondaryButton title='back' />
 					</Link>
 				</div>
 
-				<div className='flex flex-col gap-4 mt-8'>
-					<h1 className='text-2xl font-bold text-[#ffffff90]'>{profile.name}</h1>
+				<div className='flex flex-col gap-4 mt-4 sm:mt-8'>
+					<h1 className='text-xl sm:text-2xl font-bold text-[#ffffff90]'>{profile.name}</h1>
 
-					<div className='grid grid-cols-2 gap-4'>
+					<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
 						{profile.region && (
 							<div className='relative flex gap-2 items-center bg-[#ffffff10] p-4 rounded-xl'>
-								<img src='/icons/globe.svg' className='w-5 h-5 opacity-70' />
-								<div className='flex-1'>
+								<img src='/icons/globe.svg' className='w-5 h-5 opacity-70 shrink-0' />
+								<div className='flex-1 min-w-0'>
 									<p className='text-sm text-[#ffffff60]'>Region</p>
 									<button
 										onClick={() => setIsRegionDropdownOpen(!isRegionDropdownOpen)}
 										className='flex items-center justify-between w-full group'
 									>
-										<p className='text-[#ffffff90] group-hover:text-white transition-colors'>{profile.region}</p>
+										<p className='text-[#ffffff90] group-hover:text-white transition-colors truncate'>{profile.region}</p>
 										<img
 											src='/icons/chevron-down.svg'
-											className={`transition-transform duration-200 ${isRegionDropdownOpen ? 'rotate-180' : ''}`}
+											className={`transition-transform duration-200 ml-2 shrink-0 ${isRegionDropdownOpen ? 'rotate-180' : ''}`}
 										/>
 									</button>
 
 									{isRegionDropdownOpen && (
-										<div className='absolute left-0 right-0 mt-2 bg-[#ffffff15] backdrop-blur-lg rounded-xl py-2 max-h-64 overflow-y-auto z-10'>
+										<div className='absolute left-0 right-0 mt-2 bg-[#ffffff15] backdrop-blur-lg rounded-xl py-2 max-h-64 overflow-y-auto z-10 shadow-lg'>
 											{AWS_REGIONS.map((region) => (
 												<button
 													key={region}
@@ -106,16 +126,18 @@ export default function ProfilePage() {
 
 						{profile.access_key_id && (
 							<div className='flex gap-2 items-center bg-[#ffffff10] p-4 rounded-xl'>
-								<img src='/icons/key.svg' className='w-5 h-5 opacity-70' />
-								<div className='flex-1'>
+								<img src='/icons/key.svg' className='w-5 h-5 opacity-70 shrink-0' />
+								<div className='flex-1 min-w-0'>
 									<p className='text-sm text-[#ffffff60]'>Access Key ID</p>
-									<div className='flex items-center justify-between'>
-										<p className='text-[#ffffff90] font-mono'>{showAccessKey ? profile.access_key_id : maskKey(profile.access_key_id)}</p>
+									<div className='flex items-center justify-between gap-2'>
+										<p className='text-[#ffffff90] font-mono truncate'>
+											{showAccessKey ? profile.access_key_id : maskKey(profile.access_key_id)}
+										</p>
 										<button
 											onClick={() => setShowAccessKey(!showAccessKey)}
-											className='p-1 hover:bg-[#ffffff10] rounded-lg transition-colors'
+											className='p-1 hover:bg-[#ffffff10] rounded-lg transition-colors shrink-0'
 										>
-											{showAccessKey ? <img src='/icons/eye-off.svg' /> : <img src='/icons/eye.svg' />}
+											<img src={showAccessKey ? '/icons/eye-off.svg' : '/icons/eye.svg'} />
 										</button>
 									</div>
 								</div>
@@ -124,18 +146,18 @@ export default function ProfilePage() {
 
 						{profile.secret_access_key && (
 							<div className='flex gap-2 items-center bg-[#ffffff10] p-4 rounded-xl'>
-								<img src='/icons/key.svg' className='w-5 h-5 opacity-70' />
-								<div className='flex-1'>
+								<img src='/icons/key.svg' className='w-5 h-5 opacity-70 shrink-0' />
+								<div className='flex-1 min-w-0'>
 									<p className='text-sm text-[#ffffff60]'>Secret Access Key</p>
-									<div className='flex items-center justify-between'>
-										<p className='text-[#ffffff90] font-mono'>
+									<div className='flex items-center justify-between gap-2'>
+										<p className='text-[#ffffff90] font-mono truncate'>
 											{showSecretKey ? profile.secret_access_key : maskKey(profile.secret_access_key)}
 										</p>
 										<button
 											onClick={() => setShowSecretKey(!showSecretKey)}
-											className='p-1 hover:bg-[#ffffff10] rounded-lg transition-colors'
+											className='p-1 hover:bg-[#ffffff10] rounded-lg transition-colors shrink-0'
 										>
-											{showSecretKey ? <img src='/icons/eye-off.svg' /> : <img src='/icons/eye.svg' />}
+											<img src={showSecretKey ? '/icons/eye-off.svg' : '/icons/eye.svg'} />
 										</button>
 									</div>
 								</div>
@@ -144,10 +166,10 @@ export default function ProfilePage() {
 
 						{profile.output && (
 							<div className='flex gap-2 items-center bg-[#ffffff10] p-4 rounded-xl'>
-								<img src='/icons/terminal.svg' className='w-5 h-5 opacity-70' />
-								<div>
+								<img src='/icons/terminal.svg' className='w-5 h-5 opacity-70 shrink-0' />
+								<div className='flex-1 min-w-0'>
 									<p className='text-sm text-[#ffffff60]'>Output Format</p>
-									<p className='text-[#ffffff90]'>{profile.output}</p>
+									<p className='text-[#ffffff90] truncate'>{profile.output}</p>
 								</div>
 							</div>
 						)}

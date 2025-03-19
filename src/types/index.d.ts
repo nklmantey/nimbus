@@ -6,7 +6,9 @@ type AwsProfile = {
 	output?: string
 }
 
-type ProfilesContextType = {
+interface ProfilesContextType {
 	profiles: AwsProfile[]
-	setProfiles: React.Dispatch<React.SetStateAction<Array<AwsProfile>>>
+	isLoading: boolean
+	error: Error | null
+	mutateProfiles: () => Promise<void>
 }

@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Router } from './routes'
-import { ContextProvider } from './contexts'
+import { ProfilesProvider } from '@/contexts/ProfilesContext'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<ContextProvider>
+		<ProfilesProvider>
 			<Router />
-		</ContextProvider>
+		</ProfilesProvider>
 	</React.StrictMode>
 )
