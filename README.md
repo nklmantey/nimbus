@@ -1,6 +1,6 @@
 # nimbus
 
-A modern desktop application built with Tauri, React, and TypeScript, featuring a beautiful and responsive UI powered by Tailwind CSS.
+a lightweight desktop application that allows users to view, manage, and switch between AWS profiles effortlessly.
 
 ## 🛠️ Tech Stack
 
