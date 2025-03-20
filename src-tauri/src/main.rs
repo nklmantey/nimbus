@@ -7,13 +7,14 @@ use serde::{Deserialize, Serialize};
 use std::error::Error;
 use ini::Ini;
 use std::collections::HashMap;
+use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct AwsProfile {
     name: String,
     region: Option<String>,
-    access_key_id: Option<String>,
-    secret_access_key: Option<String>,
+    access_key_id: String,
+    secret_access_key: String,
     output: Option<String>,
 }
 
@@ -23,6 +24,59 @@ fn read_aws_file(path: PathBuf) -> Result<Ini, Box<dyn Error>> {
     } else {
         Ok(Ini::new())
     }
+}
+
+#[tauri::command]
+async fn add_aws_profile(profile: AwsProfile) -> Result<(), String> {
+    let home = home_dir().ok_or("Could not find home directory")?;
+    let aws_dir = home.join(".aws");
+    let credentials_path = aws_dir.join("credentials");
+    let config_path = aws_dir.join("config");
+
+    // Ensure the .aws directory exists
+    if !aws_dir.exists() {
+        fs::create_dir_all(&aws_dir)
+            .map_err(|e| format!("Failed to create .aws directory: {}", e))?;
+    }
+
+    // Update credentials file
+    let mut credentials_ini = read_aws_file(credentials_path.clone())
+        .map_err(|e| format!("Failed to read credentials: {}", e))?;
+
+    // Add profile to credentials file
+    credentials_ini.with_section(Some(profile.name.clone()))
+        .set("aws_access_key_id", profile.access_key_id)
+        .set("aws_secret_access_key", profile.secret_access_key);
+
+    // Save credentials file
+    credentials_ini.write_to_file(credentials_path)
+        .map_err(|e| format!("Failed to write credentials: {}", e))?;
+
+    // Update config file
+    let mut config_ini = read_aws_file(config_path.clone())
+        .map_err(|e| format!("Failed to read config: {}", e))?;
+
+    // Set section name (default or profile xyz)
+    let section_name = if profile.name == "default" {
+        Some("default".to_string())
+    } else {
+        Some(format!("profile {}", profile.name))
+    };
+
+    // Add profile to config file
+    if let Some(region) = profile.region {
+        config_ini.with_section(section_name.clone()).set("region", region);
+    }
+    
+    if let Some(output) = profile.output {
+        config_ini.with_section(section_name).set("output", output);
+    }
+
+    // Save config file
+    config_ini.write_to_file(config_path)
+        .map_err(|e| format!("Failed to write config: {}", e))?;
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -43,10 +97,18 @@ async fn fetch_aws_profiles() -> Result<Vec<AwsProfile>, String> {
     for (sec, prop) in credentials_ini.iter() {
         let profile_name = sec.unwrap_or("default").to_string();
         
+        let access_key_id = prop.get("aws_access_key_id")
+            .map(String::from)
+            .unwrap_or_default();
+            
+        let secret_access_key = prop.get("aws_secret_access_key")
+            .map(String::from)
+            .unwrap_or_default();
+            
         let profile = AwsProfile {
             name: profile_name.clone(),
-            access_key_id: prop.get("aws_access_key_id").map(String::from),
-            secret_access_key: prop.get("aws_secret_access_key").map(String::from),
+            access_key_id,
+            secret_access_key,
             region: None,
             output: None,
         };
@@ -65,8 +127,8 @@ async fn fetch_aws_profiles() -> Result<Vec<AwsProfile>, String> {
         let profile = profiles_map.entry(profile_name.clone()).or_insert(AwsProfile {
             name: profile_name,
             region: None,
-            access_key_id: None,
-            secret_access_key: None,
+            access_key_id: String::new(),
+            secret_access_key: String::new(),
             output: None,
         });
 
@@ -99,7 +161,7 @@ fn greet(name: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, fetch_aws_profiles])
+        .invoke_handler(tauri::generate_handler![greet, fetch_aws_profiles, add_aws_profile])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,35 +1,22 @@
 import { createContext, useContext, useCallback } from 'react'
-import { invoke } from '@tauri-apps/api'
-import useSWR, { SWRConfiguration } from 'swr'
-
-const fetcher = async (): Promise<AwsProfile[]> => {
-	try {
-		return await invoke<AwsProfile[]>('fetch_aws_profiles')
-	} catch (err) {
-		throw new Error(err as string)
-	}
-}
-
-const swrConfig: SWRConfiguration = {
-	revalidateOnFocus: false,
-	revalidateOnReconnect: true,
-	refreshInterval: 0,
-	errorRetryCount: 3,
-}
+import { useProfiles as useSWRProfiles, addAwsProfile } from '@/lib/aws-profiles'
 
 const ProfilesContext = createContext<ProfilesContextType | undefined>(undefined)
 
 export function ProfilesProvider({ children }: { children: React.ReactNode }) {
-	const {
-		data: profiles = [],
-		error,
-		isLoading,
-		mutate: handleFetchProfiles,
-	} = useSWR<AwsProfile[]>('/api/aws-profiles', fetcher, swrConfig)
+	const { profiles, error, isLoading, mutate } = useSWRProfiles()
 
 	const fetchProfiles = useCallback(async () => {
-		await handleFetchProfiles()
-	}, [handleFetchProfiles])
+		await mutate()
+	}, [mutate])
+
+	const addProfile = useCallback(
+		async (profile: AwsProfile) => {
+			await addAwsProfile(profile)
+			await mutate()
+		},
+		[mutate]
+	)
 
 	return (
 		<ProfilesContext.Provider
@@ -38,6 +25,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
 				isLoading,
 				error: error as Error | null,
 				fetchProfiles,
+				addProfile,
 			}}
 		>
 			{children}

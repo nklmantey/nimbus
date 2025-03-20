@@ -19,6 +19,7 @@ type ButtonProps = {
 	isDisabled?: boolean
 	className?: string
 	icon?: string
+	type?: 'button' | 'submit' | 'reset'
 }
 
 type InputProps = {

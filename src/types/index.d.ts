@@ -1,8 +1,8 @@
 type AwsProfile = {
 	name: string
 	region?: string
-	access_key_id?: string
-	secret_access_key?: string
+	access_key_id: string
+	secret_access_key: string
 	output?: string
 }
 
@@ -11,6 +11,7 @@ type ProfilesContextType = {
 	isLoading: boolean
 	error: Error | null
 	fetchProfiles: () => Promise<void>
+	addProfile: (profile: AwsProfile) => Promise<void>
 }
 
 type FormDataType = {
