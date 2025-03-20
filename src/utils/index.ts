@@ -1,7 +1,7 @@
-import { useProfilesContext } from '@/contexts'
+import { useProfiles } from '@/contexts/ProfilesContext'
 
 export function findProfileByName(profileName: string): AwsProfile | null {
-	const { profiles } = useProfilesContext()
+	const { profiles } = useProfiles()
 
 	if (!profileName || profiles.length === 0) return null
 	return profiles.find((profile) => profile.name === profileName) ?? null

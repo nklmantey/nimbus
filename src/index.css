@@ -15,7 +15,7 @@
 	--font-p22mackinac: 'P22Mackinac', sans-serif;
 	--font-primary: #ffffff90;
 	--font-secondary: #ffffff;
-	--background-primary: #212427;
+	--background-primary: #1a1a1a;
 }
 
 body {
@@ -29,4 +29,83 @@ h2,
 h3 {
 	font-family: var(--font-p22mackinac);
 	letter-spacing: -0.025em;
+}
+
+/* ANIMATIONS */
+.slide-in-from-right {
+	animation: slideInFromRight 0.5s ease-out;
+}
+
+.slide-out-to-right {
+	animation: slideOutToRight 0.5s ease-in;
+}
+
+.slide-in-from-bottom {
+	animation: slideInFromBottom 0.5s ease-out;
+}
+
+.slide-out-to-bottom {
+	animation: slideOutToBottom 0.5s ease-in;
+}
+
+.fade-in {
+	animation: fadeIn 0.5s ease-out;
+}
+
+.fade-out {
+	animation: fadeOut 0.5s ease-in;
+}
+
+@keyframes slideInFromRight {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideOutToRight {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(100%);
+	}
+}
+
+@keyframes slideInFromBottom {
+	from {
+		transform: translateY(100%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideOutToRight {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(100%);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
 }

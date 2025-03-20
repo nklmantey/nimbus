@@ -20,11 +20,16 @@ const swrConfig: SWRConfiguration = {
 const ProfilesContext = createContext<ProfilesContextType | undefined>(undefined)
 
 export function ProfilesProvider({ children }: { children: React.ReactNode }) {
-	const { data: profiles = [], error, isLoading, mutate } = useSWR<AwsProfile[]>('/api/aws-profiles', fetcher, swrConfig)
+	const {
+		data: profiles = [],
+		error,
+		isLoading,
+		mutate: handleFetchProfiles,
+	} = useSWR<AwsProfile[]>('/api/aws-profiles', fetcher, swrConfig)
 
-	const mutateProfiles = useCallback(async () => {
-		await mutate()
-	}, [mutate])
+	const fetchProfiles = useCallback(async () => {
+		await handleFetchProfiles()
+	}, [handleFetchProfiles])
 
 	return (
 		<ProfilesContext.Provider
@@ -32,7 +37,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
 				profiles,
 				isLoading,
 				error: error as Error | null,
-				mutateProfiles,
+				fetchProfiles,
 			}}
 		>
 			{children}

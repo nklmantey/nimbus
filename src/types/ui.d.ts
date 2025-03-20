@@ -12,22 +12,23 @@ type TypographyProps = {
 	className?: string
 }
 
-type PrimaryButtonProps = {
+type ButtonProps = {
 	title: string
 	onClick?: () => void
 	isLoading?: boolean
 	isDisabled?: boolean
 	className?: string
+	icon?: string
 }
 
-type SecondaryButtonProps = {
-	icon?: string
-} & PrimaryButtonProps
-
 type InputProps = {
-	placeholder: string
+	placeholder?: string
 	error?: string
 	label?: string
 	className?: string
 	isPassword?: boolean
+	type?: string
+	name?: string
+	value?: string
+	onChange?: React.ChangeEventHandler<HTMLInputElement>
 }

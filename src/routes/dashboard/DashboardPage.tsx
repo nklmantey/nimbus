@@ -1,10 +1,10 @@
 import { ErrorState, Loader, EmptyState } from '@/components/global'
-import { SecondaryButton } from '@/components/ui'
-import { ProfileCard } from '@/components/dashboard'
+import { Button } from '@/components/ui'
+import { AddProfileSheet, ProfileCard } from '@/components/dashboard'
 import { useProfiles } from '@/contexts/ProfilesContext'
 
 export default function DashboardPage() {
-	const { profiles, isLoading, error, mutateProfiles } = useProfiles()
+	const { profiles, isLoading, error, fetchProfiles } = useProfiles()
 
 	if (isLoading) {
 		return (
@@ -18,7 +18,7 @@ export default function DashboardPage() {
 		return (
 			<div className='flex flex-col gap-4 items-center justify-center w-full h-screen'>
 				<ErrorState message='we could not fetch your aws profiles' />
-				<SecondaryButton title='retry' icon='/icons/sync.svg' onClick={() => mutateProfiles()} />
+				<Button title='retry' icon='/icons/sync.svg' onClick={fetchProfiles} />
 			</div>
 		)
 	}
@@ -30,8 +30,8 @@ export default function DashboardPage() {
 			) : (
 				<div className='p-12 lg:px-48 lg:py-24 w-full h-full flex flex-col gap-4'>
 					<div className='flex items-center gap-2'>
-						<SecondaryButton title='add new profile' />
-						<SecondaryButton title='refresh' onClick={() => mutateProfiles()} />
+						<AddProfileSheet />
+						<Button title='refresh' onClick={fetchProfiles} />
 					</div>
 
 					<div className='flex gap-4'>

@@ -1,5 +1,5 @@
 import { ErrorState, Loader } from '@/components/global'
-import { SecondaryButton } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { Link, useParams, Navigate } from 'react-router'
 import { useState } from 'react'
 import { useProfiles } from '@/contexts/ProfilesContext'
@@ -48,7 +48,7 @@ export default function ProfilePage() {
 			<div className='flex flex-col gap-4 items-center justify-center w-full h-screen'>
 				<ErrorState message='Error loading profile' />
 				<Link to='/dashboard'>
-					<SecondaryButton title='back to dashboard' />
+					<Button title='back to dashboard' />
 				</Link>
 			</div>
 		)
@@ -65,7 +65,7 @@ export default function ProfilePage() {
 			<div className='w-full h-screen flex items-center justify-center'>
 				<div className='flex items-center gap-2'>
 					<Link to='/dashboard'>
-						<SecondaryButton title='back' />
+						<Button title='back' />
 					</Link>
 					<ErrorState message={`Profile "${profileName}" not found`} />
 				</div>
@@ -80,7 +80,7 @@ export default function ProfilePage() {
 			<div className='w-full max-w-7xl p-4 sm:p-6 lg:p-8 flex flex-col gap-4'>
 				<div className='flex items-center gap-2'>
 					<Link to='/dashboard'>
-						<SecondaryButton title='back' />
+						<Button title='back' />
 					</Link>
 				</div>
 

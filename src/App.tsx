@@ -1,5 +1,5 @@
 import { Typography } from '@/components/global'
-import { PrimaryButton, SecondaryButton } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { Link } from 'react-router'
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
 			</div>
 
 			<Link to='/dashboard'>
-				<SecondaryButton title='get started' />
+				<Button title='get started' />
 			</Link>
 		</div>
 	)

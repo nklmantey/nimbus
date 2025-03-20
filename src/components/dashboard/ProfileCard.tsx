@@ -1,5 +1,5 @@
 import { Typography } from '@/components/global'
-import { SecondaryButton } from '../ui'
+import { Button } from '../ui'
 import { Link } from 'react-router'
 
 interface ProfileCardProps {
@@ -44,7 +44,7 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
 				</div>
 
 				<div className='w-full flex items-center justify-end'>
-					<SecondaryButton title='view' icon='/icons/arrow-out.svg' />
+					<Button title='view' icon='/icons/arrow-out.svg' />
 				</div>
 			</div>
 		</Link>

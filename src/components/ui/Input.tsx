@@ -13,7 +13,7 @@ export default function Input({ placeholder, error, label, className, isPassword
 				type={isPassword ? 'password' : 'text'}
 				placeholder={placeholder}
 				className={cn(
-					'border border-[#ffffff10] w-full outline-0 min-w-[400px] rounded-sm px-4 py-2',
+					'border border-[#ffffff10] w-full outline-0 rounded-sm px-4 py-2',
 					error && 'border-[crimson] ring-0 outline-0',
 					className
 				)}

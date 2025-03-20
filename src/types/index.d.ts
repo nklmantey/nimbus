@@ -6,9 +6,25 @@ type AwsProfile = {
 	output?: string
 }
 
-interface ProfilesContextType {
+type ProfilesContextType = {
 	profiles: AwsProfile[]
 	isLoading: boolean
 	error: Error | null
-	mutateProfiles: () => Promise<void>
+	fetchProfiles: () => Promise<void>
+}
+
+type FormDataType = {
+	name: string
+	accessKeyId: string
+	secretAccessKey: string
+	region: string
+	output: string
+}
+
+type FormErrorsType = {
+	name?: string
+	accessKeyId?: string
+	secretAccessKey?: string
+	region?: string
+	output?: string
 }
