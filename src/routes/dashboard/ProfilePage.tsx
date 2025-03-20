@@ -52,7 +52,7 @@ export default function ProfilePage() {
 
 	return (
 		<div className='w-full min-h-screen flex items-start justify-center'>
-			<div className='w-full max-w-7xl p-4 sm:p-6 lg:p-8 flex flex-col gap-4'>
+			<div className='p-12 lg:px-48 lg:py-24 w-full h-full flex flex-col gap-4'>
 				<div className='flex items-center gap-2'>
 					<Link to='/dashboard'>
 						<Button title='back' />
